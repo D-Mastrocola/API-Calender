@@ -81,7 +81,7 @@ setDate();
 
 setInterval(setDate, 5000);
 
-let createTimeBlock = (hour, text) => {
+let createTimeBlock = (hour, text, index) => {
   let blockState;
   if (hour - moment().format("k") < 0) {
     blockState = "past";
@@ -99,8 +99,10 @@ let createTimeBlock = (hour, text) => {
   timeblock.append(timeblockTime);
 
   let timeblockDesc = $("<div>")
-    .addClass("description col-10 text-dark " + blockState)
+    .addClass("description col-10 text-dark p-2 " + blockState)
     .attr("block-state", blockState)
+    .attr('schedule-index', index)
+    .attr('hour', hour)
     .text(text);
   timeblock.append(timeblockDesc);
 
@@ -113,16 +115,18 @@ let createTimeBlock = (hour, text) => {
 };
 //create a timeblock for 9am to 5pm
 for (let i = 0; i < schedule.length; i++) {
-  createTimeBlock(schedule[i].time, schedule[i].text);
+  createTimeBlock(schedule[i].time, schedule[i].text, i);
 }
 
 $(".container").on("click", "div", function () {
   let blockState = $(this).attr("block-state");
   let desc = $(this).text().trim();
+  let index = parseInt($(this).attr('schedule-index'));
 
   let descInput = $("<textarea>")
     .addClass("form-class col-10 description text-dark " + blockState)
     .attr("block-state", blockState)
+    .attr('schedule-index', index)
     .val(desc);
 
   $(this).replaceWith(descInput);
@@ -130,10 +134,15 @@ $(".container").on("click", "div", function () {
 });
 $(".container").on("blur", "textarea", function () {
   let blockState = $(this).attr("block-state");
+  let index = parseInt($(this).attr('schedule-index'));
   let desc = $(this).val();
   let timeblockDesc = $("<div>")
     .addClass("description col-10 text-dark p-2 " + blockState)
-    .attr("block-state", blockState);
+    .attr("block-state", blockState)
+    .attr('schedule-index', index);
   timeblockDesc.text(desc);
   $(this).replaceWith(timeblockDesc);
+
+  schedule[index].text = desc;
+  saveSchedule();
 });
