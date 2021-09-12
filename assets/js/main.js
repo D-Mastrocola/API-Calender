@@ -1,47 +1,139 @@
 let date;
 let day;
 let time;
-let timeBlockContainer = $('.container')
+let timeBlockContainer = $(".container");
+let schedule;
 
+if (localStorage.getItem("schedule")) {
+  schedule = JSON.parse(localStorage.getItem("schedule"));
+} else {
+  schedule = [
+    {
+      time: 9,
+      text: "",
+    },
+    {
+      time: 10,
+      text: "",
+    },
+    {
+      time: 11,
+      text: "",
+    },
+    {
+      time: 12,
+      text: "",
+    },
+    {
+      time: 13,
+      text: "",
+    },
+    {
+      time: 14,
+      text: "",
+    },
+    {
+      time: 15,
+      text: "",
+    },
+    {
+      time: 16,
+      text: "",
+    },
+    {
+      time: 17,
+      text: "",
+    },
+  ];
+}
+
+let saveSchedule = () => {
+  localStorage.setItem("schedule", JSON.stringify(schedule));
+};
+saveSchedule();
+
+let setTimeblockState = () => {
+  let timeBlockContainer = [];
+  $(".container .timeblock .description").each((i, li) => {
+    $(li).removeClass("past present future");
+    console.log($(li));
+    if (i < moment().format('k')) {
+      $(li).addClass("past");
+    } else if (i > moment().format('k')) {
+      $(li).addClass("future");
+    } else {
+      $(li).addClass("present");
+    }
+    console.log($(li));
+  });
+  console.log(timeBlockContainer);
+};
 
 let setDate = () => {
-    day = moment().get('date');
-    date = moment().format('dddd, MMMM Do YYYY');
-    time = moment().format('LT');
-    console.log(date)
+  day = moment().get("date");
+  date = moment().format("dddd, MMMM Do YYYY");
+  time = moment().format("LT");
 
-    $('#currentDay').text(date);
-    $('#currentTime').text(time);
-}
+  $("#currentDay").text(date);
+  setTimeblockState();
+};
 setDate();
 
-setInterval(setDate, 1000);
+setInterval(setDate, 5000);
 
+let createTimeBlock = (hour, text) => {
+  let blockState;
+  if (hour - moment().format("k") < 0) {
+    blockState = "past";
+  } else if (hour - moment().format("k") > 0) {
+    blockState = "future";
+  } else {
+    blockState = "present";
+  }
+  let blockTime = moment(day + " " + hour + ":00").format("ha");
 
-let createTimeBlock = (hour) => {
-    let blockTime = moment(day + " " + hour  + ":00").format('ha');
+  let timeblock = $("<li>").addClass("timeblock row col-12");
 
-    let timeblock = $('<div>');
-    timeblock.addClass('timeblock row col-12');
+  let timeblockTime = $("<p>").addClass("hour col-1");
+  timeblockTime.text(blockTime);
+  timeblock.append(timeblockTime);
 
-    let timeblockTime = $('<div>').addClass('hour col-1')
-    timeblockTime.text(blockTime);
-    timeblock.append(timeblockTime);
+  let timeblockDesc = $("<div>")
+    .addClass("description col-10 text-dark " + blockState)
+    .attr("block-state", blockState)
+    .text(text);
+  timeblock.append(timeblockDesc);
 
-    let timeblockDesc = $("<div>");
-    timeblockDesc.addClass('description col-10 past');
-    timeblock.append(timeblockDesc);
+  let timeblockButton = $("<button>").addClass("btn btn-save saveBtn col-1");
+  let timeBlockButtonIcon = $("<span>").addClass("oi oi-check");
+  timeblockButton.append(timeBlockButtonIcon);
+  timeblock.append(timeblockButton);
 
-    let timeblockButton = $('<button>')
-    timeblockButton.addClass("btn btn-save saveBtn col-1");
-    let timeBlockButtonIcon = $('<span>')
-    timeBlockButtonIcon.addClass('oi oi-check')
-    timeblockButton.append(timeBlockButtonIcon)
-    timeblock.append(timeblockButton); 
-
-    $(timeBlockContainer).append(timeblock);
-}
+  $(timeBlockContainer).append(timeblock);
+};
 //create a timeblock for 9am to 5pm
-for(let i = 9; i < 18; i++) {
-    createTimeBlock(i);
+for (let i = 0; i < schedule.length; i++) {
+  createTimeBlock(schedule[i].time, schedule[i].text);
 }
+
+$(".container").on("click", "div", function () {
+  let blockState = $(this).attr("block-state");
+  let desc = $(this).text().trim();
+
+  let descInput = $("<textarea>")
+    .addClass("form-class col-10 description text-dark " + blockState)
+    .attr("block-state", blockState)
+    .val(desc);
+
+  $(this).replaceWith(descInput);
+  descInput.trigger("focus");
+});
+$(".container").on("blur", "textarea", function () {
+  let blockState = $(this).attr("block-state");
+  let desc = $(this).val();
+  let timeblockDesc = $("<div>")
+    .addClass("description col-10 text-dark p-2 " + blockState)
+    .attr("block-state", blockState);
+  timeblockDesc.text(desc);
+  $(this).replaceWith(timeblockDesc);
+});
