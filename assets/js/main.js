@@ -95,19 +95,19 @@ let createTimeBlock = (hour, text, index) => {
 
   let timeblock = $("<li>").addClass("timeblock row col-12");
 
-  let timeblockTime = $("<p>").addClass("hour col-1");
+  let timeblockTime = $("<p>").addClass("hour col-2 col-lg-1");
   timeblockTime.text(blockTime);
   timeblock.append(timeblockTime);
 
   let timeblockDesc = $("<div>")
-    .addClass("description col-10 text-dark p-2 " + blockState)
+    .addClass("description col-8 col-lg-10 text-dark p-2 " + blockState)
     .attr("block-state", blockState)
     .attr('schedule-index', index)
     .attr('hour', hour)
     .text(text);
   timeblock.append(timeblockDesc);
 
-  let timeblockButton = $("<button>").addClass("btn btn-save saveBtn col-1");
+  let timeblockButton = $("<button>").addClass("btn btn-save saveBtn col-2 col-lg-1");
   let timeBlockButtonIcon = $("<span>").addClass("oi oi-check");
   timeblockButton.append(timeBlockButtonIcon);
   timeblock.append(timeblockButton);
@@ -145,5 +145,5 @@ $(".container").on("blur", "textarea", function () {
   $(this).replaceWith(timeblockDesc);
 
   schedule[index].text = desc;
-  saveSchedule();
+  //saveSchedule();
 });
