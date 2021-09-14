@@ -1,5 +1,11 @@
 # Work Day Scheduler Starter Code
 
+![Site Preview](https://github.com/D-Mastrocola/API-Calender/blob/main/assets/images/screenshot.png)
+
+[Live Site](https://d-mastrocola.github.io/API-Calender/)
+
+## About 
+I made a Work Day Scheduler app with [JQuery](https://jquery.com/) and [Bootstrap](https://getbootstrap.com/). The icons for the buttons can be found [here](https://icons.getbootstrap.com/)
 ## User Story
 - AS AN employee with a busy schedule
 - I WANT to add important events to a daily planner
