@@ -1,7 +1,7 @@
 let date;
 let day;
 let time;
-let timeBlockContainer = $(".container");
+let timeBlockContainer = $(".container-fluid");
 let schedule;
 
 if (localStorage.getItem("schedule")) {
@@ -93,21 +93,21 @@ let createTimeBlock = (hour, text, index) => {
   console.log()
   console.log(blockTime)
 
-  let timeblock = $("<li>").addClass("timeblock row col-12");
+  let timeblock = $("<li>").addClass("timeblock row col-12 m-0");
 
-  let timeblockTime = $("<p>").addClass("hour col-2 col-lg-1");
+  let timeblockTime = $("<p>").addClass("hour col-3 col-md-2 col-lg-1");
   timeblockTime.text(blockTime);
   timeblock.append(timeblockTime);
 
   let timeblockDesc = $("<div>")
-    .addClass("description col-8 col-lg-10 text-dark p-2 " + blockState)
+    .addClass("description col-6 col-md-8 col-lg-10 text-dark p-2 " + blockState)
     .attr("block-state", blockState)
     .attr('schedule-index', index)
     .attr('hour', hour)
     .text(text);
   timeblock.append(timeblockDesc);
 
-  let timeblockButton = $("<button>").addClass("btn btn-save saveBtn col-2 col-lg-1");
+  let timeblockButton = $("<button>").addClass("btn btn-save saveBtn col-3 col-md-2 col-lg-1");
   let timeBlockButtonIcon = $("<span>").addClass("oi oi-check");
   timeblockButton.append(timeBlockButtonIcon);
   timeblock.append(timeblockButton);
@@ -125,20 +125,23 @@ $(".container").on("click", "div", function () {
   let index = parseInt($(this).attr('schedule-index'));
 
   let descInput = $("<textarea>")
-    .addClass("form-class col-10 description text-dark " + blockState)
+    .addClass("form-class col-6 col-md-8 col-lg-10 description text-dark " + blockState)
     .attr("block-state", blockState)
     .attr('schedule-index', index)
     .val(desc);
 
   $(this).replaceWith(descInput);
   descInput.trigger("focus");
+  descInput.on('change', () => {
+    console.log('event')
+  })
 });
 $(".container").on("blur", "textarea", function () {
   let blockState = $(this).attr("block-state");
   let index = parseInt($(this).attr('schedule-index'));
   let desc = $(this).val();
   let timeblockDesc = $("<div>")
-    .addClass("description col-10 text-dark p-2 " + blockState)
+    .addClass("description col-6 col-md-8 col-lg-10 text-dark p-2 " + blockState)
     .attr("block-state", blockState)
     .attr('schedule-index', index);
   timeblockDesc.text(desc);
