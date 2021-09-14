@@ -64,13 +64,12 @@ let setTimeblockState = () => {
     } else {
       $(li).addClass("present");
     }
-    console.log($(li));
   });
   console.log(timeBlockContainer);
 };
 
 let setDate = () => {
-  day = moment().get("date");
+  day = moment().dayOfYear();
   date = moment().format("dddd, MMMM Do YYYY");
   time = moment().format("LT");
 
@@ -91,6 +90,8 @@ let createTimeBlock = (hour, text, index) => {
     blockState = "present";
   }
   let blockTime = moment(day + " " + hour + ":00").format("ha");
+  console.log()
+  console.log(blockTime)
 
   let timeblock = $("<li>").addClass("timeblock row col-12");
 
